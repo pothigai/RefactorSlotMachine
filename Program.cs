@@ -20,54 +20,55 @@
             UISlotMachine UI = new UISlotMachine();
 
             //Ask the user for a min buy in of 500 points
-            UI.print($"Please enter your buy in amount, the minimum is {MIN_BUYIN} points:");
+            UI.printOutputMessage($"Please enter your buy in amount, the minimum is {MIN_BUYIN} points:");
 
-            string playerInput = UI.scan();
+            string playerInput = UI.scanInputString();
             int totalPoints;
 
-            while (!Int32.TryParse(playerInput, out totalPoints) || totalPoints < MIN_BUYIN)
+            while (!UI.scanInputInteger(playerInput, out totalPoints) || totalPoints < MIN_BUYIN)
             {
-                UI.print($"The entered amount either does not meet the minimum buy in amount or is not a valid input, please enter a valid amount of aleast {MIN_BUYIN}:");
-                playerInput = UI.scan();
+                UI.printOutputMessage($"The entered amount either does not meet the minimum buy in amount or is not a valid input, please enter a valid amount of aleast {MIN_BUYIN}:");
+                playerInput = UI.scanInputString();
             }
 
-            UI.print("Choose which lines to play (R = Row, C = Column, D = Diagonal) and then press P to play:");
+            UI.printOutputMessage("Choose which lines to play (R = Row, C = Column, D = Diagonal) and then press P to play:");
 
 
             bool[] selectedLines = new bool[3];
 
             while (true)
             {
-                string choice = UI.scan().ToLower();
-                UI.print("");
+                char choice;  
+                UI.scanInputChar(UI.scanInputString(), out choice);
+                UI.printOutputMessage("");
 
-                if (choice == "r")
+                if (choice == 'r')
                 {
                     selectedLines[0] = true;
-                    UI.print("Row selected.");
+                    UI.printOutputMessage("Row selected.");
                 }
-                if (choice == "c")
+                if (choice == 'c')
                 {
                     selectedLines[1] = true;
-                    UI.print("Column selected.");
+                    UI.printOutputMessage("Column selected.");
                 }
-                if (choice == "d")
+                if (choice == 'd')
                 {
                     selectedLines[2] = true;
-                    UI.print("Diagonal selected.");
+                    UI.printOutputMessage("Diagonal selected.");
                 }
-                if (choice == "p")
+                if (choice == 'p')
                 {
 
-                    UI.print("Selected lines:");
-                    if (selectedLines[0]) UI.print("Row");
-                    if (selectedLines[1]) UI.print("Column");
-                    if (selectedLines[2]) UI.print("Diagonal");
+                    UI.printOutputMessage("Selected lines:");
+                    if (selectedLines[0]) UI.printOutputMessage("Row");
+                    if (selectedLines[1]) UI.printOutputMessage("Column");
+                    if (selectedLines[2]) UI.printOutputMessage("Diagonal");
                     break;
                 }
-                if (choice != "p" || choice != "r" || choice != "c" || choice != "d")
+                if (choice != 'p' || choice != 'r' || choice != 'c' || choice != 'd')
                 {
-                    UI.print("Invalid choice. Please select (R), (C), (D), or (P) to play.");
+                    UI.printOutputMessage("Invalid choice. Please select (R), (C), (D), or (P) to play.");
                 }
             }
 
@@ -80,19 +81,19 @@
                 //Checking if user has enough points to play
                 if (totalPoints <= 0)
                 {
-                    UI.print($"You do not have enough points, would you like to top up? ({POSITVE_INPUT}/{NEGATIVE_INPUT}): ");
-                    string topUp = UI.scan();
+                    UI.printOutputMessage($"You do not have enough points, would you like to top up? ({POSITVE_INPUT}/{NEGATIVE_INPUT}): ");
+                    string topUp = UI.scanInputString();
 
                     while (topUp.ToLower() != POSITVE_INPUT && topUp.ToLower() != NEGATIVE_INPUT)
                     {
-                        UI.print($"Invalid input, please enter {POSITVE_INPUT}/{NEGATIVE_INPUT}:");
-                        topUp = UI.scan();
+                        UI.printOutputMessage($"Invalid input, please enter {POSITVE_INPUT}/{NEGATIVE_INPUT}:");
+                        topUp = UI.scanInputString();
                     }
 
                     if (topUp.ToLower() == POSITVE_INPUT)
                     {
-                        UI.print("Please enter the amount of points you want to purchase");
-                        totalPoints += Convert.ToInt32(UI.scan());
+                        UI.printOutputMessage("Please enter the amount of points you want to purchase");
+                        totalPoints += Convert.ToInt32(UI.scanInputString());
                     }
                     else
                     {
@@ -119,7 +120,7 @@
                 //Print the matrix to display to the user
                 for (int i = 0; i < MATRIX_SIZE; i++)
                 {
-                    UI.print("");
+                    UI.printOutputMessage("");
 
                     for (int j = 0; j < MATRIX_SIZE; j++)
                     {
@@ -127,11 +128,11 @@
                     }
                 }
 
-                UI.print("");
-                UI.print("Selected lines:");
-                if (selectedLines[0]) UI.print("Row");
-                if (selectedLines[1]) UI.print("Column");
-                if (selectedLines[2]) UI.print("Diagonal");
+                UI.printOutputMessage("");
+                UI.printOutputMessage("Selected lines:");
+                if (selectedLines[0]) UI.printOutputMessage("Row");
+                if (selectedLines[1]) UI.printOutputMessage("Column");
+                if (selectedLines[2]) UI.printOutputMessage("Diagonal");
 
 
                 bool rowMatch = false;
@@ -144,7 +145,7 @@
                     int rowCount;
                     if (rowCheck(slots, out rowCount))
                     {
-                        UI.print($"You won, all values in row {rowCount} are a match");
+                        UI.printOutputMessage($"You won, all values in row {rowCount} are a match");
                         totalPoints += HOR_POINT;
                         rowMatch = true;
                     }
@@ -156,13 +157,13 @@
                     int diagCount;
                     if (diagonalCheck(slots, out diagCount)[0])
                     {
-                        UI.print($"You won, all values in diagonal {diagCount} are a match");
+                        UI.printOutputMessage($"You won, all values in diagonal {diagCount} are a match");
                         totalPoints += DIAG_POINT;
                         diagonalMatch = true;
                     }
                     if (diagonalCheck(slots, out diagCount)[1])
                     {
-                        UI.print($"You won, all values in diagonal {diagCount} are a match");
+                        UI.printOutputMessage($"You won, all values in diagonal {diagCount} are a match");
                         totalPoints += DIAG_POINT;
                         diagonalMatch = true;
                     }
@@ -188,23 +189,23 @@
 
                 if (allValuesMatch)
                 {
-                    UI.print($"You won {JACKPOT} points, all values in the slot match!");
+                    UI.printOutputMessage($"You won {JACKPOT} points, all values in the slot match!");
                     totalPoints = totalPoints + JACKPOT;
                 }
                 if (!rowMatch && !diagonalMatch && !allValuesMatch)
                 {
-                    UI.print("You lost!");
+                    UI.printOutputMessage("You lost!");
                 }
 
                 //Display round winnings and ask user if they wish to play again
-                UI.print($"Your total points are {totalPoints}");
-                UI.print($"Do you want to play again? {POSITVE_INPUT}/{NEGATIVE_INPUT}");
-                playAgain = UI.scan();
+                UI.printOutputMessage($"Your total points are {totalPoints}");
+                UI.printOutputMessage($"Do you want to play again? {POSITVE_INPUT}/{NEGATIVE_INPUT}");
+                playAgain = UI.scanInputString();
 
                 while (playAgain.ToLower() != POSITVE_INPUT && playAgain.ToLower() != NEGATIVE_INPUT)
                 {
-                    UI.print($"Invalid input. Please enter '{POSITVE_INPUT}' or '{NEGATIVE_INPUT}'.");
-                    playAgain = UI.scan();
+                    UI.printOutputMessage($"Invalid input. Please enter '{POSITVE_INPUT}' or '{NEGATIVE_INPUT}'.");
+                    playAgain = UI.scanInputString();
                 }
             }
         }

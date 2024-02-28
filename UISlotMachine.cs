@@ -8,15 +8,24 @@ namespace RefactorSlotMachine
 {
     internal class UISlotMachine
     {
-        public void print(string message)
+        public void printOutputMessage(string message)
         {
             Console.WriteLine(message);
         }
 
-        public string scan()
+        public string scanInputString()
         {
-            string message = Console.ReadLine();
-            return message;
+            return Console.ReadLine();
+        }
+
+        public bool scanInputInteger(string input, out int result)
+        {
+            return int.TryParse(input, out result);
+        }
+
+        public bool scanInputChar(string input, out char result)
+        {
+            return char.TryParse(input, out result);
         }
 
         public void clear()
