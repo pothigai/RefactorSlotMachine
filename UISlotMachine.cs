@@ -18,14 +18,37 @@ namespace RefactorSlotMachine
             return Console.ReadLine();
         }
 
-        public bool scanInputInteger(string input, out int result)
+        public int scanInputInteger(string message)
         {
-            return int.TryParse(input, out result);
+            int output = 0;
+            string input = "";
+            while (!int.TryParse(input, out output))
+            {
+                Console.WriteLine(message);
+                input = Console.ReadLine();
+                if (!int.TryParse(input, out output))
+                {
+                    Console.WriteLine("Invalid input, please enter an integer.");
+                }
+            }
+            return output;
         }
 
-        public bool scanInputChar(string input, out char result)
+        public char scanInputChar(string message)
         {
-            return char.TryParse(input, out result);
+            char output;
+            string input = "";
+            while (!char.TryParse(input, out output))
+            {
+                Console.WriteLine(message);
+                input = Console.ReadLine();
+                if (!char.TryParse(input, out output))
+                {
+                    Console.WriteLine("Invalid input, please enter a character.");
+                }
+            }
+            return char.ToLower(output);
+            //return char.TryParse(input, out result);
         }
 
         public void clear()

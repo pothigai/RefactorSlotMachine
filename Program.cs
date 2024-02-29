@@ -12,34 +12,26 @@
             const int MATRIX_SIZE = 3;
             const int MAX_NUMBER = 10;
             const int PLAY_COST = 50;
-            const string POSITVE_INPUT = "y";
-            const string NEGATIVE_INPUT = "n";
+            const char POSITVE_INPUT = 'y';
+            const char NEGATIVE_INPUT = 'n';
 
             Random rnd = new Random();
 
             UISlotMachine UI = new UISlotMachine();
 
             //Ask the user for a min buy in of 500 points
-            UI.printOutputMessage($"Please enter your buy in amount, the minimum is {MIN_BUYIN} points:");
+            int totalPoints = UI.scanInputInteger($"Please enter your buy in amount, the minimum is {MIN_BUYIN} points:");
 
-            string playerInput = UI.scanInputString();
-            int totalPoints;
-
-            while (!UI.scanInputInteger(playerInput, out totalPoints) || totalPoints < MIN_BUYIN)
+            while (totalPoints < MIN_BUYIN)
             {
-                UI.printOutputMessage($"The entered amount either does not meet the minimum buy in amount or is not a valid input, please enter a valid amount of aleast {MIN_BUYIN}:");
-                playerInput = UI.scanInputString();
+                totalPoints = UI.scanInputInteger($"The entered amount does not meet the minimum buy in amount, please enter an amount of aleast {MIN_BUYIN}:");
             }
-
-            UI.printOutputMessage("Choose which lines to play (R = Row, C = Column, D = Diagonal) and then press P to play:");
-
 
             bool[] selectedLines = new bool[3];
 
             while (true)
             {
-                char choice;  
-                UI.scanInputChar(UI.scanInputString(), out choice);
+                char choice = UI.scanInputChar("Choose which lines to play (R = Row, C = Column, D = Diagonal) and then press P to play:");  
                 UI.printOutputMessage("");
 
                 if (choice == 'r')
@@ -66,13 +58,13 @@
                     if (selectedLines[2]) UI.printOutputMessage("Diagonal");
                     break;
                 }
-                if (choice != 'p' || choice != 'r' || choice != 'c' || choice != 'd')
+                if (choice != 'p' && choice != 'r' && choice != 'c' && choice != 'd')
                 {
                     UI.printOutputMessage("Invalid choice. Please select (R), (C), (D), or (P) to play.");
                 }
             }
 
-            string playAgain = POSITVE_INPUT;
+            char playAgain = POSITVE_INPUT;
 
             while (playAgain == POSITVE_INPUT)
             {
@@ -81,19 +73,19 @@
                 //Checking if user has enough points to play
                 if (totalPoints <= 0)
                 {
-                    UI.printOutputMessage($"You do not have enough points, would you like to top up? ({POSITVE_INPUT}/{NEGATIVE_INPUT}): ");
-                    string topUp = UI.scanInputString();
+                    char topUp = UI.scanInputChar($"You do not have enough points, would you like to top up? ({POSITVE_INPUT}/{NEGATIVE_INPUT}): ");
 
-                    while (topUp.ToLower() != POSITVE_INPUT && topUp.ToLower() != NEGATIVE_INPUT)
+                    while (topUp != POSITVE_INPUT && topUp != NEGATIVE_INPUT)
                     {
-                        UI.printOutputMessage($"Invalid input, please enter {POSITVE_INPUT}/{NEGATIVE_INPUT}:");
-                        topUp = UI.scanInputString();
+                        topUp = UI.scanInputChar($"Invalid input, please enter {POSITVE_INPUT}/{NEGATIVE_INPUT}:");
                     }
 
-                    if (topUp.ToLower() == POSITVE_INPUT)
+                    if (topUp == POSITVE_INPUT)
                     {
-                        UI.printOutputMessage("Please enter the amount of points you want to purchase");
-                        totalPoints += Convert.ToInt32(UI.scanInputString());
+                        while (totalPoints <= MIN_BUYIN)
+                        {
+                            totalPoints += UI.scanInputInteger($"You don't meet the minimum of {MIN_BUYIN}, please enter another amount:");
+                        }
                     }
                     else
                     {
@@ -199,13 +191,11 @@
 
                 //Display round winnings and ask user if they wish to play again
                 UI.printOutputMessage($"Your total points are {totalPoints}");
-                UI.printOutputMessage($"Do you want to play again? {POSITVE_INPUT}/{NEGATIVE_INPUT}");
-                playAgain = UI.scanInputString();
+                playAgain = UI.scanInputChar($"Do you want to play again? {POSITVE_INPUT}/{NEGATIVE_INPUT}");
 
-                while (playAgain.ToLower() != POSITVE_INPUT && playAgain.ToLower() != NEGATIVE_INPUT)
+                while (playAgain != POSITVE_INPUT && playAgain != NEGATIVE_INPUT)
                 {
-                    UI.printOutputMessage($"Invalid input. Please enter '{POSITVE_INPUT}' or '{NEGATIVE_INPUT}'.");
-                    playAgain = UI.scanInputString();
+                    playAgain = UI.scanInputChar($"Invalid input. Please enter '{POSITVE_INPUT}' or '{NEGATIVE_INPUT}'.");
                 }
             }
         }
