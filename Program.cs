@@ -15,6 +15,10 @@
             const int PLAY_COST = 50;
             const char POSITVE_INPUT = 'y';
             const char NEGATIVE_INPUT = 'n';
+            const char ROW = 'r';
+            const char COL = 'c';
+            const char DIAG = 'd';
+            const char PLAY = 'p';
 
             Random rnd = new Random();
 
@@ -35,22 +39,22 @@
                 char choice = UI.scanInputChar("Choose which lines to play (R = Row, C = Column, D = Diagonal) and then press P to play:");
                 UI.printOutputMessage("");
 
-                if (choice == 'r')
+                if (choice == ROW)
                 {
                     selectedLines[0] = true;
                     UI.printOutputMessage("Row selected.");
                 }
-                if (choice == 'c')
+                if (choice == COL)
                 {
                     selectedLines[1] = true;
                     UI.printOutputMessage("Column selected.");
                 }
-                if (choice == 'd')
+                if (choice == DIAG)
                 {
                     selectedLines[2] = true;
                     UI.printOutputMessage("Diagonal selected.");
                 }
-                if (choice == 'p')
+                if (choice == PLAY)
                 {
 
                     UI.printOutputMessage("Selected lines:");
@@ -59,7 +63,7 @@
                     if (selectedLines[2]) UI.printOutputMessage("Diagonal");
                     break;
                 }
-                if (choice != 'p' && choice != 'r' && choice != 'c' && choice != 'd')
+                if (choice != PLAY && choice != ROW && choice != COL && choice != DIAG)
                 {
                     UI.printOutputMessage("Invalid choice. Please select (R), (C), (D), or (P) to play.");
                 }
