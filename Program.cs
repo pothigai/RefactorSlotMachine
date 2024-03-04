@@ -6,6 +6,7 @@
         {
             //Initialize constants
             const int HOR_POINT = 20;
+            const int COL_POINT = 20;
             const int DIAG_POINT = 30;
             const int JACKPOT = 100;
             const int MIN_BUYIN = 500;
@@ -31,7 +32,7 @@
 
             while (true)
             {
-                char choice = UI.scanInputChar("Choose which lines to play (R = Row, C = Column, D = Diagonal) and then press P to play:");  
+                char choice = UI.scanInputChar("Choose which lines to play (R = Row, C = Column, D = Diagonal) and then press P to play:");
                 UI.printOutputMessage("");
 
                 if (choice == 'r')
@@ -97,17 +98,17 @@
 
                 //Generate the random 3x3 matrix for the slot machine
 
-                //int[,] slots = new int[3, 3] { { 2, 4, 4 }, { 2, 2, 2 }, { 9, 6, 2 } }; //Use to test code
+                int[,] slots = new int[3, 3] { { 2, 2, 8 }, { 2, 2, 2 }, { 2, 2, 9 } }; //Use to test code
 
-                int[,] slots = new int[MATRIX_SIZE, MATRIX_SIZE];
+                //int[,] slots = new int[MATRIX_SIZE, MATRIX_SIZE];
 
-                for (int i = 0; i < MATRIX_SIZE; i++)
-                {
-                    for (int j = 0; j < MATRIX_SIZE; j++)
-                    {
-                        slots[i, j] = rnd.Next(MAX_NUMBER);
-                    }
-                }
+                //for (int i = 0; i < MATRIX_SIZE; i++)
+                //{
+                //    for (int j = 0; j < MATRIX_SIZE; j++)
+                //    {
+                //        slots[i, j] = rnd.Next(MAX_NUMBER);
+                //    }
+                //}
 
                 //Print the matrix to display to the user
                 for (int i = 0; i < MATRIX_SIZE; i++)
@@ -128,6 +129,7 @@
 
 
                 bool rowMatch = false;
+                bool colMatch = false;
                 bool diagonalMatch = false;
                 bool allValuesMatch = true;
 
@@ -140,6 +142,18 @@
                         UI.printOutputMessage($"You won, all values in row {rowCount} are a match");
                         totalPoints += HOR_POINT;
                         rowMatch = true;
+                    }
+                }
+
+                //Check columns for a match in values
+                if (selectedLines[1])
+                {
+                    int colCount;
+                    if (colCheck(slots, out colCount))
+                    {
+                        UI.printOutputMessage($"You won, all values in column {colCount} are a match");
+                        totalPoints += COL_POINT;
+                        colMatch = true;
                     }
                 }
 
@@ -184,7 +198,7 @@
                     UI.printOutputMessage($"You won {JACKPOT} points, all values in the slot match!");
                     totalPoints = totalPoints + JACKPOT;
                 }
-                if (!rowMatch && !diagonalMatch && !allValuesMatch)
+                if (!rowMatch && !colMatch && !diagonalMatch && !allValuesMatch)
                 {
                     UI.printOutputMessage("You lost!");
                 }
@@ -224,6 +238,33 @@
                 }
             }
             return rowMatch;
+        }
+
+        static bool colCheck(int[,] inputMatrix, out int colCount)
+        {
+            bool colMatch = false;
+            colCount = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                int colValue = inputMatrix[0, i];
+
+                bool allColSame = true;
+
+                for (int j = 0; j < 3; j++)
+                {
+                    if (inputMatrix[j, i] != colValue)
+                    {
+                        allColSame = false;
+                        break;
+                    }
+                }
+                if (allColSame)
+                {
+                    colMatch = true;
+                    colCount = i + 1;
+                }
+            }
+            return colMatch;
         }
 
         static bool[] diagonalCheck(int[,] inputMatrix, out int diagCount)
