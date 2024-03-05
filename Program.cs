@@ -23,6 +23,7 @@
             Random rnd = new Random();
 
             UISlotMachine UI = new UISlotMachine();
+            SlotMachineChecker SC = new SlotMachineChecker();
 
             //Ask the user for a min buy in of 500 points
             int totalPoints = UI.scanInputInteger($"Please enter your buy in amount, the minimum is {MIN_BUYIN} points:");
@@ -131,7 +132,7 @@
                 if (selectedLines[1]) UI.printOutputMessage("Column");
                 if (selectedLines[2]) UI.printOutputMessage("Diagonal");
 
-
+                
                 bool rowMatch = false;
                 bool colMatch = false;
                 bool diagonalMatch = false;
@@ -141,7 +142,7 @@
                 if (selectedLines[0])
                 {
                     int rowCount;
-                    if (rowCheck(slots, out rowCount))
+                    if (SC.checkRowResults(slots, out rowCount))
                     {
                         UI.printOutputMessage($"You won, all values in row {rowCount} are a match");
                         totalPoints += HOR_POINT;
@@ -153,7 +154,7 @@
                 if (selectedLines[1])
                 {
                     int colCount;
-                    if (colCheck(slots, out colCount))
+                    if (SC.checkColumnResults(slots, out colCount))
                     {
                         UI.printOutputMessage($"You won, all values in column {colCount} are a match");
                         totalPoints += COL_POINT;
@@ -165,13 +166,13 @@
                 if (selectedLines[2])
                 {
                     int diagCount;
-                    if (diagonalCheck(slots, out diagCount)[0])
+                    if (SC.checkDiagonalResults(slots, out diagCount)[0])
                     {
                         UI.printOutputMessage($"You won, all values in diagonal {diagCount} are a match");
                         totalPoints += DIAG_POINT;
                         diagonalMatch = true;
                     }
-                    if (diagonalCheck(slots, out diagCount)[1])
+                    if (SC.checkDiagonalResults(slots, out diagCount)[1])
                     {
                         UI.printOutputMessage($"You won, all values in diagonal {diagCount} are a match");
                         totalPoints += DIAG_POINT;
@@ -217,90 +218,6 @@
                 }
             }
         }
-        static bool rowCheck(int[,] inputMatrix, out int rowCount)
-        {
-            bool rowMatch = false;
-            rowCount = 0;
-            for (int i = 0; i < 3; i++)
-            {
-                int rowValue = inputMatrix[i, 0];
-
-                bool allRowSame = true;
-
-                for (int j = 1; j < 3; j++)
-                {
-                    if (inputMatrix[i, j] != rowValue)
-                    {
-                        allRowSame = false;
-                        break;
-                    }
-                }
-                if (allRowSame)
-                {
-                    rowMatch = true;
-                    rowCount = i + 1;
-                }
-            }
-            return rowMatch;
-        }
-
-        static bool colCheck(int[,] inputMatrix, out int colCount)
-        {
-            bool colMatch = false;
-            colCount = 0;
-            for (int i = 0; i < 3; i++)
-            {
-                int colValue = inputMatrix[0, i];
-
-                bool allColSame = true;
-
-                for (int j = 0; j < 3; j++)
-                {
-                    if (inputMatrix[j, i] != colValue)
-                    {
-                        allColSame = false;
-                        break;
-                    }
-                }
-                if (allColSame)
-                {
-                    colMatch = true;
-                    colCount = i + 1;
-                }
-            }
-            return colMatch;
-        }
-
-        static bool[] diagonalCheck(int[,] inputMatrix, out int diagCount)
-        {
-
-            bool[] diagonals = new bool[2];
-            diagonals[0] = true;
-            diagonals[1] = true;
-
-            diagCount = 0;
-
-            for (int i = 1; i < 3; i++)
-            {
-                if (inputMatrix[0, 0] != inputMatrix[i, i])
-                {
-                    diagonals[0] = false;
-                }
-                if (inputMatrix[0, 2] != inputMatrix[i, 2 - i])
-                {
-                    diagonals[1] = false;
-                }
-            }
-
-            if (diagonals[0])
-            {
-                diagCount = 1;
-            }
-            if (diagonals[1])
-            {
-                diagCount = 2;
-            }
-            return diagonals;
-        }
+   
     }
 }
