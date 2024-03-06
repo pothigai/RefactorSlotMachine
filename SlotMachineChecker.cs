@@ -8,15 +8,13 @@ namespace RefactorSlotMachine
 {
     internal class SlotMachineChecker
     {
-
-        public bool checkRowResults(int[,] inputMatrix, out int rowCount)
+        public bool checkRowResults(int[,] inputMatrix, out bool[] matchingRows)
         {
-            bool rowMatch = false;
-            rowCount = 0;
+            matchingRows = new bool[3]; 
+
             for (int i = 0; i < 3; i++)
             {
                 int rowValue = inputMatrix[i, 0];
-
                 bool allRowSame = true;
 
                 for (int j = 1; j < 3; j++)
@@ -27,40 +25,41 @@ namespace RefactorSlotMachine
                         break;
                     }
                 }
+
                 if (allRowSame)
                 {
-                    rowMatch = true;
-                    rowCount = i + 1;
+                    matchingRows[i] = true; 
                 }
             }
-            return rowMatch;
+
+            return matchingRows.Contains(true);
         }
 
-        public bool checkColumnResults(int[,] inputMatrix, out int colCount)
+        public bool checkColumnResults(int[,] inputMatrix, out bool[] matchingRows)
         {
-            bool colMatch = false;
-            colCount = 0;
+            matchingRows = new bool[3]; 
+
             for (int i = 0; i < 3; i++)
             {
                 int colValue = inputMatrix[0, i];
-
                 bool allColSame = true;
 
-                for (int j = 0; j < 3; j++)
+                for (int j = 1; j < 3; j++)
                 {
-                    if (inputMatrix[j, i] != colValue)
+                    if (inputMatrix[j, i] !=  colValue)
                     {
                         allColSame = false;
                         break;
                     }
                 }
+
                 if (allColSame)
                 {
-                    colMatch = true;
-                    colCount = i + 1;
+                    matchingRows[i] = true;
                 }
             }
-            return colMatch;
+
+            return matchingRows.Contains(true);
         }
 
         public bool[] checkDiagonalResults(int[,] inputMatrix, out int diagCount)

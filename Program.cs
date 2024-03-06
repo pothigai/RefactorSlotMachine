@@ -5,13 +5,12 @@
         static void Main(string[] args)
         {
             //Initialize constants
-            const int HOR_POINT = 20;
+            const int ROW_POINT = 20;
             const int COL_POINT = 20;
             const int DIAG_POINT = 30;
             const int JACKPOT = 100;
             const int MIN_BUYIN = 500;
             const int MATRIX_SIZE = 3;
-            const int MAX_NUMBER = 10;
             const int PLAY_COST = 50;
             const char POSITVE_INPUT = 'y';
             const char NEGATIVE_INPUT = 'n';
@@ -103,7 +102,7 @@
 
                 //Generate the random 3x3 matrix for the slot machine
 
-                int[,] slots = new int[3, 3] { { 2, 2, 8 }, { 2, 2, 2 }, { 2, 2, 9 } }; //Use to test code
+                int[,] slots = new int[3, 3] { { 2, 2, 2 }, { 2, 4, 2 }, { 2, 3, 2 } }; //Use to test code
 
                 //int[,] slots = new int[MATRIX_SIZE, MATRIX_SIZE];
 
@@ -132,7 +131,7 @@
                 if (selectedLines[1]) UI.printOutputMessage("Column");
                 if (selectedLines[2]) UI.printOutputMessage("Diagonal");
 
-                
+
                 bool rowMatch = false;
                 bool colMatch = false;
                 bool diagonalMatch = false;
@@ -141,24 +140,62 @@
                 //Check rows for a match in values
                 if (selectedLines[0])
                 {
-                    int rowCount;
-                    if (SC.checkRowResults(slots, out rowCount))
+                    bool[] matchingRows;
+                    rowMatch = SC.checkRowResults(slots, out matchingRows);
+                    if (rowMatch)
                     {
-                        UI.printOutputMessage($"You won, all values in row {rowCount} are a match");
-                        totalPoints += HOR_POINT;
+                        string rows = "";
+                        for (int i = 0; i < matchingRows.Length; i++)
+                        {
+                            if (matchingRows[i])
+                            {
+                                rows += (i + 1).ToString();
+                                if (i < matchingRows.Length - 1)
+                                {
+                                    rows += ",";
+                                }
+                            }
+                        }
+                        UI.printOutputMessage($"You won, all values are a match in row/s: " + rows);
                         rowMatch = true;
+                        for (int i = 0; i < matchingRows.Length; i++)
+                        {
+                            if (matchingRows[i])
+                            {
+                                totalPoints += ROW_POINT;
+                            }
+                        }
                     }
                 }
 
                 //Check columns for a match in values
                 if (selectedLines[1])
                 {
-                    int colCount;
-                    if (SC.checkColumnResults(slots, out colCount))
+                    bool[] matchingCols;
+                    colMatch = SC.checkColumnResults(slots, out matchingCols);
+                    if (colMatch)
                     {
-                        UI.printOutputMessage($"You won, all values in column {colCount} are a match");
-                        totalPoints += COL_POINT;
-                        colMatch = true;
+                        string cols = "";
+                        for (int i = 0; i < matchingCols.Length; i++)
+                        {
+                            if (matchingCols[i])
+                            {
+                                cols += (i + 1).ToString();
+                                if (i < matchingCols.Length - 1)
+                                {
+                                    cols += ",";
+                                }
+                            }
+                        }
+                        UI.printOutputMessage($"You won, all values are a match in column/s: " + cols);
+                        rowMatch = true;
+                        for (int i = 0; i < matchingCols.Length; i++)
+                        {
+                            if (matchingCols[i])
+                            {
+                                totalPoints += COL_POINT;
+                            }
+                        }
                     }
                 }
 
@@ -218,6 +255,6 @@
                 }
             }
         }
-   
+
     }
 }
