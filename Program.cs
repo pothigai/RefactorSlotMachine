@@ -19,8 +19,6 @@
             const char DIAG = 'd';
             const char PLAY = 'p';
 
-            Random rnd = new Random();
-
             UISlotMachine UI = new UISlotMachine();
             SlotMachineChecker SC = new SlotMachineChecker();
 
@@ -137,66 +135,63 @@
                 bool diagonalMatch = false;
                 bool allValuesMatch = true;
 
-                //Check rows for a match in values
-                if (selectedLines[0])
+                bool CheckAndPrintMatches(bool[] selectedLines, int[,] slots, string type)
                 {
-                    bool[] matchingRows;
-                    rowMatch = SC.checkRowResults(slots, out matchingRows);
-                    if (rowMatch)
+                    bool match = false;
+                    bool[] matchingLines = new bool[3];
+                    int points = 0;
+
+                    if (type == "row")
                     {
-                        string rows = "";
-                        for (int i = 0; i < matchingRows.Length; i++)
+                        match = SC.checkRowResults(slots, out matchingLines);
+                        points = ROW_POINT;
+                    }
+
+                    else if (type == "column")
+                    {
+                        match = SC.checkColumnResults(slots, out matchingLines);
+                        points = COL_POINT;
+                    }
+
+                    if (match)
+                    {
+                        string lines = "";
+                        for (int i = 0; i < matchingLines.Length; i++)
                         {
-                            if (matchingRows[i])
+                            if (matchingLines[i])
                             {
-                                rows += (i + 1).ToString();
-                                if (i < matchingRows.Length - 1)
+                                lines += (i + 1).ToString();
+                                if (i < matchingLines.Length - 1)
                                 {
-                                    rows += ",";
+                                    lines += ",";
                                 }
                             }
                         }
-                        UI.printOutputMessage($"You won, all values are a match in row/s: " + rows);
-                        rowMatch = true;
-                        for (int i = 0; i < matchingRows.Length; i++)
+
+                        UI.printOutputMessage($"You won, all values are a match in {type}/s: " + lines);
+                        match = true;
+                        for (int i = 0; i < matchingLines.Length; i++)
                         {
-                            if (matchingRows[i])
+                            if (matchingLines[i])
                             {
-                                totalPoints += ROW_POINT;
+                                totalPoints += points;
                             }
                         }
                     }
+
+                    return match;
+                }
+
+                //Check rows for a match in values
+                if (selectedLines[0])
+                {
+                    rowMatch = CheckAndPrintMatches(selectedLines, slots, "row");
                 }
 
                 //Check columns for a match in values
                 if (selectedLines[1])
                 {
-                    bool[] matchingCols;
-                    colMatch = SC.checkColumnResults(slots, out matchingCols);
-                    if (colMatch)
-                    {
-                        string cols = "";
-                        for (int i = 0; i < matchingCols.Length; i++)
-                        {
-                            if (matchingCols[i])
-                            {
-                                cols += (i + 1).ToString();
-                                if (i < matchingCols.Length - 1)
-                                {
-                                    cols += ",";
-                                }
-                            }
-                        }
-                        UI.printOutputMessage($"You won, all values are a match in column/s: " + cols);
-                        rowMatch = true;
-                        for (int i = 0; i < matchingCols.Length; i++)
-                        {
-                            if (matchingCols[i])
-                            {
-                                totalPoints += COL_POINT;
-                            }
-                        }
-                    }
+                    colMatch = CheckAndPrintMatches(selectedLines, slots, "column");
                 }
 
                 //Check diagonals for a match in values
@@ -255,6 +250,8 @@
                 }
             }
         }
+
+
 
     }
 }

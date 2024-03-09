@@ -93,5 +93,6 @@ namespace RefactorSlotMachine
             }
             return diagonals;
         }
+
     }
 }

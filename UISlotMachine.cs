@@ -48,7 +48,6 @@ namespace RefactorSlotMachine
                 }
             }
             return char.ToLower(output);
-            //return char.TryParse(input, out result);
         }
 
         public void clear()
