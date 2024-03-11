@@ -31,8 +31,8 @@
             }
 
             List<char> selectedLines = new List<char>();
-
-            while (true)
+            bool continueAhead = true;
+            while (continueAhead)
             {
                 char choice = UI.scanInputChar("Choose which lines to play (R = Row, C = Column, D = Diagonal) and then press P to play:");
                 UI.printOutputMessage("");
@@ -59,8 +59,9 @@
                         foreach (char line in selectedLines)
                         {
                             UI.printOutputMessage($"{line}");
+                            continueAhead = false;
                         }
-                        return;
+                        break;
 
                     default:
                         UI.printOutputMessage("Invalid choice. Please select (R), (C), (D), or (P) to play.");
