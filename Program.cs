@@ -30,40 +30,41 @@
                 totalPoints = UI.scanInputInteger($"The entered amount does not meet the minimum buy in amount, please enter an amount of aleast {MIN_BUYIN}:");
             }
 
-            bool[] selectedLines = new bool[3];
+            List<char> selectedLines = new List<char>();
 
             while (true)
             {
                 char choice = UI.scanInputChar("Choose which lines to play (R = Row, C = Column, D = Diagonal) and then press P to play:");
                 UI.printOutputMessage("");
 
-                if (choice == ROW)
+                switch (choice)
                 {
-                    selectedLines[0] = true;
-                    UI.printOutputMessage("Row selected.");
-                }
-                if (choice == COL)
-                {
-                    selectedLines[1] = true;
-                    UI.printOutputMessage("Column selected.");
-                }
-                if (choice == DIAG)
-                {
-                    selectedLines[2] = true;
-                    UI.printOutputMessage("Diagonal selected.");
-                }
-                if (choice == PLAY)
-                {
+                    case ROW:
+                    case COL:
+                    case DIAG:
 
-                    UI.printOutputMessage("Selected lines:");
-                    if (selectedLines[0]) UI.printOutputMessage("Row");
-                    if (selectedLines[1]) UI.printOutputMessage("Column");
-                    if (selectedLines[2]) UI.printOutputMessage("Diagonal");
-                    break;
-                }
-                if (choice != PLAY && choice != ROW && choice != COL && choice != DIAG)
-                {
-                    UI.printOutputMessage("Invalid choice. Please select (R), (C), (D), or (P) to play.");
+                        if (!selectedLines.Contains(choice))
+                        {
+                            selectedLines.Add(choice);
+                            UI.printOutputMessage($"{choice} selected.");
+                        }
+                        else
+                        {
+                            UI.printOutputMessage($"{choice} is already selected.");
+                        }
+                        break;
+
+                    case PLAY:
+                        UI.printOutputMessage("Selected lines:");
+                        foreach (char line in selectedLines)
+                        {
+                            UI.printOutputMessage($"{line}");
+                        }
+                        return;
+
+                    default:
+                        UI.printOutputMessage("Invalid choice. Please select (R), (C), (D), or (P) to play.");
+                        break;
                 }
             }
 
@@ -100,7 +101,7 @@
 
                 //Generate the random 3x3 matrix for the slot machine
 
-                int[,] slots = new int[3, 3] { { 2, 2, 2 }, { 2, 4, 2 }, { 2, 3, 2 } }; //Use to test code
+                int[,] slots = new int[3, 3] { { 2, 3, 2 }, { 3, 2, 2 }, { 2, 3, 2 } }; //Use to test code
 
                 //int[,] slots = new int[MATRIX_SIZE, MATRIX_SIZE];
 
@@ -125,9 +126,9 @@
 
                 UI.printOutputMessage("");
                 UI.printOutputMessage("Selected lines:");
-                if (selectedLines[0]) UI.printOutputMessage("Row");
-                if (selectedLines[1]) UI.printOutputMessage("Column");
-                if (selectedLines[2]) UI.printOutputMessage("Diagonal");
+                if (selectedLines.Contains(ROW)) UI.printOutputMessage("Row");
+                if (selectedLines.Contains(COL)) UI.printOutputMessage("Column");
+                if (selectedLines.Contains(DIAG)) UI.printOutputMessage("Diagonal");
 
 
                 bool rowMatch = false;
@@ -135,7 +136,7 @@
                 bool diagonalMatch = false;
                 bool allValuesMatch = true;
 
-                bool CheckAndPrintMatches(bool[] selectedLines, int[,] slots, string type)
+                bool CheckRowAndColumn(List<char> selectedLines, int[,] slots, string type)
                 {
                     bool match = false;
                     bool[] matchingLines = new bool[3];
@@ -182,34 +183,32 @@
                     return match;
                 }
 
-                //Check rows for a match in values
-                if (selectedLines[0])
+                void AwardPointsForDiagonalMatches(int[,] slots, ref int totalPoints, ref bool diagonalMatch)
                 {
-                    rowMatch = CheckAndPrintMatches(selectedLines, slots, "row");
+                    List<int> diagCounts = SC.checkDiagonalResults(slots);
+                    foreach (int diagCount in diagCounts)
+                    {
+                        UI.printOutputMessage($"You won, all values in diagonal {diagCount} are a match");
+                        totalPoints += DIAG_POINT;
+                        diagonalMatch = true;
+                    }
+                }
+                //Check rows for a match in values
+                if (selectedLines.Contains(ROW))
+                {
+                    rowMatch = CheckRowAndColumn(selectedLines, slots, "row");
                 }
 
                 //Check columns for a match in values
-                if (selectedLines[1])
+                if (selectedLines.Contains(COL))
                 {
-                    colMatch = CheckAndPrintMatches(selectedLines, slots, "column");
+                    colMatch = CheckRowAndColumn(selectedLines, slots, "column");
                 }
 
                 //Check diagonals for a match in values
-                if (selectedLines[2])
+                if (selectedLines.Contains(ROW))
                 {
-                    int diagCount;
-                    if (SC.checkDiagonalResults(slots, out diagCount)[0])
-                    {
-                        UI.printOutputMessage($"You won, all values in diagonal {diagCount} are a match");
-                        totalPoints += DIAG_POINT;
-                        diagonalMatch = true;
-                    }
-                    if (SC.checkDiagonalResults(slots, out diagCount)[1])
-                    {
-                        UI.printOutputMessage($"You won, all values in diagonal {diagCount} are a match");
-                        totalPoints += DIAG_POINT;
-                        diagonalMatch = true;
-                    }
+                    AwardPointsForDiagonalMatches(slots, ref totalPoints, ref diagonalMatch);
                 }
 
                 int firstValue = slots[0, 0];
@@ -250,8 +249,5 @@
                 }
             }
         }
-
-
-
     }
 }

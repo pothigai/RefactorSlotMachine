@@ -10,7 +10,7 @@ namespace RefactorSlotMachine
     {
         public bool checkRowResults(int[,] inputMatrix, out bool[] matchingRows)
         {
-            matchingRows = new bool[3]; 
+            matchingRows = new bool[3];
 
             for (int i = 0; i < 3; i++)
             {
@@ -28,7 +28,7 @@ namespace RefactorSlotMachine
 
                 if (allRowSame)
                 {
-                    matchingRows[i] = true; 
+                    matchingRows[i] = true;
                 }
             }
 
@@ -37,7 +37,7 @@ namespace RefactorSlotMachine
 
         public bool checkColumnResults(int[,] inputMatrix, out bool[] matchingRows)
         {
-            matchingRows = new bool[3]; 
+            matchingRows = new bool[3];
 
             for (int i = 0; i < 3; i++)
             {
@@ -46,7 +46,7 @@ namespace RefactorSlotMachine
 
                 for (int j = 1; j < 3; j++)
                 {
-                    if (inputMatrix[j, i] !=  colValue)
+                    if (inputMatrix[j, i] != colValue)
                     {
                         allColSame = false;
                         break;
@@ -62,14 +62,13 @@ namespace RefactorSlotMachine
             return matchingRows.Contains(true);
         }
 
-        public bool[] checkDiagonalResults(int[,] inputMatrix, out int diagCount)
+        public List<int> checkDiagonalResults(int[,] inputMatrix)
         {
-
             bool[] diagonals = new bool[2];
             diagonals[0] = true;
             diagonals[1] = true;
 
-            diagCount = 0;
+            List<int> diagCounts = new List<int>();
 
             for (int i = 1; i < 3; i++)
             {
@@ -85,13 +84,13 @@ namespace RefactorSlotMachine
 
             if (diagonals[0])
             {
-                diagCount = 1;
+                diagCounts.Add(1);
             }
             if (diagonals[1])
             {
-                diagCount = 2;
+                diagCounts.Add(2);
             }
-            return diagonals;
+            return diagCounts;
         }
 
     }
