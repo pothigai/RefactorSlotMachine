@@ -1,4 +1,6 @@
-﻿namespace RefactorSlotMachine
+﻿using refact_multi_check;
+
+namespace RefactorSlotMachine
 {
     internal class Program
     {
@@ -102,7 +104,7 @@
 
                 //Generate the random 3x3 matrix for the slot machine
 
-                int[,] slots = new int[3, 3] { { 2, 3, 2 }, { 3, 2, 2 }, { 2, 3, 2 } }; //Use to test code
+                int[,] slots = new int[3, 3] { { 2, 2, 2 }, { 3, 2, 2 }, { 2, 3, 2 } }; //Use to test code
 
                 //int[,] slots = new int[MATRIX_SIZE, MATRIX_SIZE];
 
@@ -131,85 +133,27 @@
                 if (selectedLines.Contains(COL)) UI.printOutputMessage("Column");
                 if (selectedLines.Contains(DIAG)) UI.printOutputMessage("Diagonal");
 
-
                 bool rowMatch = false;
                 bool colMatch = false;
                 bool diagonalMatch = false;
                 bool allValuesMatch = true;
-
-                bool CheckRowAndColumn(List<char> selectedLines, int[,] slots, string type)
-                {
-                    bool match = false;
-                    bool[] matchingLines = new bool[3];
-                    int points = 0;
-
-                    if (type == "row")
-                    {
-                        match = SC.checkRowResults(slots, out matchingLines);
-                        points = ROW_POINT;
-                    }
-
-                    else if (type == "column")
-                    {
-                        match = SC.checkColumnResults(slots, out matchingLines);
-                        points = COL_POINT;
-                    }
-
-                    if (match)
-                    {
-                        string lines = "";
-                        for (int i = 0; i < matchingLines.Length; i++)
-                        {
-                            if (matchingLines[i])
-                            {
-                                lines += (i + 1).ToString();
-                                if (i < matchingLines.Length - 1)
-                                {
-                                    lines += ",";
-                                }
-                            }
-                        }
-
-                        UI.printOutputMessage($"You won, all values are a match in {type}/s: " + lines);
-                        match = true;
-                        for (int i = 0; i < matchingLines.Length; i++)
-                        {
-                            if (matchingLines[i])
-                            {
-                                totalPoints += points;
-                            }
-                        }
-                    }
-
-                    return match;
-                }
-
-                void AwardPointsForDiagonalMatches(int[,] slots, ref int totalPoints, ref bool diagonalMatch)
-                {
-                    List<int> diagCounts = SC.checkDiagonalResults(slots);
-                    foreach (int diagCount in diagCounts)
-                    {
-                        UI.printOutputMessage($"You won, all values in diagonal {diagCount} are a match");
-                        totalPoints += DIAG_POINT;
-                        diagonalMatch = true;
-                    }
-                }
+              
                 //Check rows for a match in values
                 if (selectedLines.Contains(ROW))
                 {
-                    rowMatch = CheckRowAndColumn(selectedLines, slots, "row");
+                    rowMatch = SC.CheckRowAndColumn(ROW, slots, ROW_POINT, COL_POINT, totalPoints);
                 }
 
                 //Check columns for a match in values
                 if (selectedLines.Contains(COL))
                 {
-                    colMatch = CheckRowAndColumn(selectedLines, slots, "column");
+                    colMatch = SC.CheckRowAndColumn(COL, slots, ROW_POINT, COL_POINT, totalPoints);
                 }
 
                 //Check diagonals for a match in values
-                if (selectedLines.Contains(ROW))
+                if (selectedLines.Contains(DIAG))
                 {
-                    AwardPointsForDiagonalMatches(slots, ref totalPoints, ref diagonalMatch);
+                    SC.AwardPointsForDiagonalMatches(slots, ref totalPoints, ref diagonalMatch, DIAG_POINT);
                 }
 
                 int firstValue = slots[0, 0];

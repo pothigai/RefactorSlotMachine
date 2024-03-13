@@ -1,13 +1,16 @@
-﻿using System;
+﻿using RefactorSlotMachine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Reflection.Metadata.BlobBuilder;
 
-namespace RefactorSlotMachine
+namespace refact_multi_check
 {
-    internal class SlotMachineChecker
+    public class SlotMachineChecker
     {
+        UISlotMachine UI = new UISlotMachine();
         public bool checkRowResults(int[,] inputMatrix, out bool[] matchingRows)
         {
             matchingRows = new bool[3];
@@ -91,6 +94,67 @@ namespace RefactorSlotMachine
                 diagCounts.Add(2);
             }
             return diagCounts;
+        }
+
+        public void AwardPointsForDiagonalMatches(int[,] slots, ref int totalPoints, ref bool diagonalMatch, int DIAG_POINT)
+        {
+            List<int> diagCounts = checkDiagonalResults(slots);
+            foreach (int diagCount in diagCounts)
+            {
+                UI.printOutputMessage($"You won, all values in diagonal {diagCount} are a match");
+                totalPoints += DIAG_POINT;
+                diagonalMatch = true;
+            }
+        }
+
+        public bool CheckRowAndColumn(char type, int[,] slots, int ROW_POINT, int COL_POINT, int totalPoints)
+        {
+            bool match = false;
+            bool[] matchingLines = new bool[3];
+            int points = 0;
+            string line = "";
+
+            if (type == 'r')
+            {
+                match = checkRowResults(slots, out matchingLines);
+                points = ROW_POINT;
+                line = "row";
+            }
+
+            else if (type == 'c')
+            {
+                match = checkColumnResults(slots, out matchingLines);
+                points = COL_POINT;
+                line = "column";
+            }
+
+            if (match)
+            {
+                string lines = "";
+                for (int i = 0; i < matchingLines.Length; i++)
+                {
+                    if (matchingLines[i])
+                    {
+                        lines += (i + 1).ToString();
+                        if (i < matchingLines.Length - 1)
+                        {
+                            lines += ",";
+                        }
+                    }
+                }
+
+                UI.printOutputMessage($"You won, all values are a match in {line}/s: " + lines);
+                match = true;
+                for (int i = 0; i < matchingLines.Length; i++)
+                {
+                    if (matchingLines[i])
+                    {
+                        totalPoints += points;
+                    }
+                }
+            }
+
+            return match;
         }
 
     }
