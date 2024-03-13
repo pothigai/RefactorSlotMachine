@@ -1,4 +1,4 @@
-﻿using refact_multi_check;
+﻿using RefactorSlotMachine;
 
 namespace RefactorSlotMachine
 {
@@ -6,34 +6,22 @@ namespace RefactorSlotMachine
     {
         static void Main(string[] args)
         {
-            //Initialize constants
-            const int ROW_POINT = 20;
-            const int COL_POINT = 20;
-            const int DIAG_POINT = 30;
-            const int JACKPOT = 100;
-            const int MIN_BUYIN = 500;
-            const int MATRIX_SIZE = 3;
-            const int PLAY_COST = 50;
-            const char POSITVE_INPUT = 'y';
-            const char NEGATIVE_INPUT = 'n';
-            const char ROW = 'r';
-            const char COL = 'c';
-            const char DIAG = 'd';
-            const char PLAY = 'p';
 
             UISlotMachine UI = new UISlotMachine();
             SlotMachineChecker SC = new SlotMachineChecker();
 
             //Ask the user for a min buy in of 500 points
-            int totalPoints = UI.scanInputInteger($"Please enter your buy in amount, the minimum is {MIN_BUYIN} points:");
+            int totalPoints = UI.scanInputInteger($"Please enter your buy in amount, the minimum is {Constants.MIN_BUYIN} points:");
 
-            while (totalPoints < MIN_BUYIN)
+            while (totalPoints < Constants.MIN_BUYIN)
             {
-                totalPoints = UI.scanInputInteger($"The entered amount does not meet the minimum buy in amount, please enter an amount of aleast {MIN_BUYIN}:");
+                totalPoints = UI.scanInputInteger($"The entered amount does not meet the minimum buy in amount, please enter an amount of aleast {Constants.MIN_BUYIN}:");
             }
 
             List<char> selectedLines = new List<char>();
+            
             bool continueAhead = true;
+            
             while (continueAhead)
             {
                 char choice = UI.scanInputChar("Choose which lines to play (R = Row, C = Column, D = Diagonal) and then press P to play:");
@@ -41,9 +29,9 @@ namespace RefactorSlotMachine
 
                 switch (choice)
                 {
-                    case ROW:
-                    case COL:
-                    case DIAG:
+                    case Constants.ROW:
+                    case Constants.COL:
+                    case Constants.DIAG:
 
                         if (!selectedLines.Contains(choice))
                         {
@@ -56,7 +44,7 @@ namespace RefactorSlotMachine
                         }
                         break;
 
-                    case PLAY:
+                    case Constants.PLAY:
                         UI.printOutputMessage("Selected lines:");
                         foreach (char line in selectedLines)
                         {
@@ -71,27 +59,27 @@ namespace RefactorSlotMachine
                 }
             }
 
-            char playAgain = POSITVE_INPUT;
+            char playAgain = Constants.POSITVE_INPUT;
 
-            while (playAgain == POSITVE_INPUT)
+            while (playAgain == Constants.POSITVE_INPUT)
             {
                 UI.clear();
 
                 //Checking if user has enough points to play
                 if (totalPoints <= 0)
                 {
-                    char topUp = UI.scanInputChar($"You do not have enough points, would you like to top up? ({POSITVE_INPUT}/{NEGATIVE_INPUT}): ");
+                    char topUp = UI.scanInputChar($"You do not have enough points, would you like to top up? ({Constants.POSITVE_INPUT}/{Constants.NEGATIVE_INPUT}): ");
 
-                    while (topUp != POSITVE_INPUT && topUp != NEGATIVE_INPUT)
+                    while (topUp != Constants.POSITVE_INPUT && topUp != Constants.NEGATIVE_INPUT)
                     {
-                        topUp = UI.scanInputChar($"Invalid input, please enter {POSITVE_INPUT}/{NEGATIVE_INPUT}:");
+                        topUp = UI.scanInputChar($"Invalid input, please enter {Constants.POSITVE_INPUT}/{Constants.NEGATIVE_INPUT}:");
                     }
 
-                    if (topUp == POSITVE_INPUT)
+                    if (topUp == Constants.POSITVE_INPUT)
                     {
-                        while (totalPoints <= MIN_BUYIN)
+                        while (totalPoints <= Constants.MIN_BUYIN)
                         {
-                            totalPoints += UI.scanInputInteger($"You don't meet the minimum of {MIN_BUYIN}, please enter another amount:");
+                            totalPoints += UI.scanInputInteger($"You don't meet the minimum of {Constants.MIN_BUYIN}, please enter another amount:");
                         }
                     }
                     else
@@ -100,7 +88,7 @@ namespace RefactorSlotMachine
                     }
                 }
 
-                totalPoints -= PLAY_COST;
+                totalPoints -= Constants.PLAY_COST;
 
                 //Generate the random 3x3 matrix for the slot machine
 
@@ -117,11 +105,11 @@ namespace RefactorSlotMachine
                 //}
 
                 //Print the matrix to display to the user
-                for (int i = 0; i < MATRIX_SIZE; i++)
+                for (int i = 0; i < Constants.MATRIX_SIZE; i++)
                 {
                     UI.printOutputMessage("");
 
-                    for (int j = 0; j < MATRIX_SIZE; j++)
+                    for (int j = 0; j < Constants.MATRIX_SIZE; j++)
                     {
                         Console.Write("   " + slots[i, j]);
                     }
@@ -129,9 +117,9 @@ namespace RefactorSlotMachine
 
                 UI.printOutputMessage("");
                 UI.printOutputMessage("Selected lines:");
-                if (selectedLines.Contains(ROW)) UI.printOutputMessage("Row");
-                if (selectedLines.Contains(COL)) UI.printOutputMessage("Column");
-                if (selectedLines.Contains(DIAG)) UI.printOutputMessage("Diagonal");
+                if (selectedLines.Contains(Constants.ROW)) UI.printOutputMessage("Row");
+                if (selectedLines.Contains(Constants.COL)) UI.printOutputMessage("Column");
+                if (selectedLines.Contains(Constants.DIAG)) UI.printOutputMessage("Diagonal");
 
                 bool rowMatch = false;
                 bool colMatch = false;
@@ -139,28 +127,28 @@ namespace RefactorSlotMachine
                 bool allValuesMatch = true;
               
                 //Check rows for a match in values
-                if (selectedLines.Contains(ROW))
+                if (selectedLines.Contains(Constants.ROW))
                 {
-                    rowMatch = SC.CheckRowAndColumn(ROW, slots, ROW_POINT, COL_POINT, totalPoints);
+                    (rowMatch, totalPoints) = SC.CheckRowAndColumn(Constants.ROW, slots, Constants.ROW_POINT, Constants.COL_POINT, totalPoints);
                 }
 
                 //Check columns for a match in values
-                if (selectedLines.Contains(COL))
+                if (selectedLines.Contains(Constants.COL))
                 {
-                    colMatch = SC.CheckRowAndColumn(COL, slots, ROW_POINT, COL_POINT, totalPoints);
+                    (colMatch, totalPoints) = SC.CheckRowAndColumn(Constants.COL, slots, Constants.ROW_POINT, Constants.COL_POINT, totalPoints);
                 }
 
                 //Check diagonals for a match in values
-                if (selectedLines.Contains(DIAG))
+                if (selectedLines.Contains(Constants.DIAG))
                 {
-                    SC.AwardPointsForDiagonalMatches(slots, ref totalPoints, ref diagonalMatch, DIAG_POINT);
+                    SC.AwardPointsForDiagonalMatches(slots, ref totalPoints, ref diagonalMatch, Constants.DIAG_POINT);
                 }
 
                 int firstValue = slots[0, 0];
                 //Check if all 9 values are a match
-                for (int i = 0; i < MATRIX_SIZE; i++)
+                for (int i = 0; i < Constants.MATRIX_SIZE; i++)
                 {
-                    for (int j = 0; j < MATRIX_SIZE; j++)
+                    for (int j = 0; j < Constants.MATRIX_SIZE; j++)
                     {
                         if (slots[i, j] != firstValue)
                         {
@@ -176,8 +164,8 @@ namespace RefactorSlotMachine
 
                 if (allValuesMatch)
                 {
-                    UI.printOutputMessage($"You won {JACKPOT} points, all values in the slot match!");
-                    totalPoints = totalPoints + JACKPOT;
+                    UI.printOutputMessage($"You won {Constants.JACKPOT} points, all values in the slot match!");
+                    totalPoints = totalPoints + Constants.JACKPOT;
                 }
                 if (!rowMatch && !colMatch && !diagonalMatch && !allValuesMatch)
                 {
@@ -186,11 +174,11 @@ namespace RefactorSlotMachine
 
                 //Display round winnings and ask user if they wish to play again
                 UI.printOutputMessage($"Your total points are {totalPoints}");
-                playAgain = UI.scanInputChar($"Do you want to play again? {POSITVE_INPUT}/{NEGATIVE_INPUT}");
+                playAgain = UI.scanInputChar($"Do you want to play again? {Constants.POSITVE_INPUT}/{Constants.NEGATIVE_INPUT}");
 
-                while (playAgain != POSITVE_INPUT && playAgain != NEGATIVE_INPUT)
+                while (playAgain != Constants.POSITVE_INPUT && playAgain != Constants.NEGATIVE_INPUT)
                 {
-                    playAgain = UI.scanInputChar($"Invalid input. Please enter '{POSITVE_INPUT}' or '{NEGATIVE_INPUT}'.");
+                    playAgain = UI.scanInputChar($"Invalid input. Please enter '{Constants.POSITVE_INPUT}' or '{Constants.NEGATIVE_INPUT}'.");
                 }
             }
         }

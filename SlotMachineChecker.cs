@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Reflection.Metadata.BlobBuilder;
 
-namespace refact_multi_check
+namespace RefactorSlotMachine
 {
     public class SlotMachineChecker
     {
@@ -107,7 +107,7 @@ namespace refact_multi_check
             }
         }
 
-        public bool CheckRowAndColumn(char type, int[,] slots, int ROW_POINT, int COL_POINT, int totalPoints)
+        public (bool,int) CheckRowAndColumn(char type, int[,] slots, int ROW_POINT, int COL_POINT, int totalPoints)
         {
             bool match = false;
             bool[] matchingLines = new bool[3];
@@ -117,14 +117,14 @@ namespace refact_multi_check
             if (type == 'r')
             {
                 match = checkRowResults(slots, out matchingLines);
-                points = ROW_POINT;
+                points = Constants.ROW_POINT;
                 line = "row";
             }
 
             else if (type == 'c')
             {
                 match = checkColumnResults(slots, out matchingLines);
-                points = COL_POINT;
+                points = Constants.COL_POINT;
                 line = "column";
             }
 
@@ -154,7 +154,7 @@ namespace refact_multi_check
                 }
             }
 
-            return match;
+            return (match, totalPoints);
         }
 
     }
