@@ -40,7 +40,7 @@ namespace RefactorSlotMachine
 
         public bool checkColumnResults(int[,] inputMatrix, out bool[] matchingRows)
         {
-            matchingRows = new bool[3];
+            matchingRows = new bool[Constants.MATRIX_SIZE];
 
             for (int i = 0; i < 3; i++)
             {
