@@ -22,13 +22,19 @@ namespace RefactorSlotMachine
         {
             int output = 0;
             string input = "";
-            while (!int.TryParse(input, out output))
+
+            while (true)
             {
                 Console.WriteLine(message);
                 input = Console.ReadLine();
                 if (!int.TryParse(input, out output))
                 {
                     Console.WriteLine("Invalid input, please enter an integer.");
+                }
+                else
+                {
+                    int.TryParse(input, out output);
+                    break;
                 }
             }
             return output;
