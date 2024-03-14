@@ -67,9 +67,8 @@ namespace RefactorSlotMachine
 
         public List<int> checkDiagonalResults(int[,] inputMatrix)
         {
-            bool[] diagonals = new bool[2];
-            diagonals[0] = true;
-            diagonals[1] = true;
+            bool diagonal1 = true;
+            bool diagonal2 = true;
 
             List<int> diagCounts = new List<int>();
 
@@ -77,19 +76,19 @@ namespace RefactorSlotMachine
             {
                 if (inputMatrix[0, 0] != inputMatrix[i, i])
                 {
-                    diagonals[0] = false;
+                    diagonal1 = false;
                 }
                 if (inputMatrix[0, 2] != inputMatrix[i, 2 - i])
                 {
-                    diagonals[1] = false;
+                    diagonal2 = false;
                 }
             }
 
-            if (diagonals[0])
+            if (diagonal1)
             {
                 diagCounts.Add(1);
             }
-            if (diagonals[1])
+            if (diagonal2)
             {
                 diagCounts.Add(2);
             }
