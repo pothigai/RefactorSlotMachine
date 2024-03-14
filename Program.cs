@@ -125,17 +125,17 @@ namespace RefactorSlotMachine
                 bool colMatch = false;
                 bool diagonalMatch = false;
                 bool allValuesMatch = true;
-              
+
                 //Check rows for a match in values
                 if (selectedLines.Contains(Constants.ROW))
                 {
-                    (rowMatch, totalPoints) = SC.CheckRowAndColumn(Constants.ROW, slots, Constants.ROW_POINT, Constants.COL_POINT, totalPoints);
+                    (rowMatch, totalPoints) = SC.CheckRowAndColumn(Constants.ROW, slots, totalPoints);
                 }
 
                 //Check columns for a match in values
                 if (selectedLines.Contains(Constants.COL))
                 {
-                    (colMatch, totalPoints) = SC.CheckRowAndColumn(Constants.COL, slots, Constants.ROW_POINT, Constants.COL_POINT, totalPoints);
+                    (colMatch, totalPoints) = SC.CheckRowAndColumn(Constants.COL, slots, totalPoints);
                 }
 
                 //Check diagonals for a match in values

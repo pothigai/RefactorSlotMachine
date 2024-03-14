@@ -107,7 +107,7 @@ namespace RefactorSlotMachine
             }
         }
 
-        public (bool,int) CheckRowAndColumn(char type, int[,] slots, int ROW_POINT, int COL_POINT, int totalPoints)
+        public (bool, int) CheckRowAndColumn(char type, int[,] slots, int totalPoints)
         {
             bool match = false;
             bool[] matchingLines = new bool[3];
