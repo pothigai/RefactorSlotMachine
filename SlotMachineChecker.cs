@@ -114,14 +114,14 @@ namespace RefactorSlotMachine
             int points = 0;
             string line = "";
 
-            if (type == 'r')
+            if (type == Constants.ROW)
             {
                 match = checkRowResults(slots, out matchingLines);
                 points = Constants.ROW_POINT;
                 line = "row";
             }
 
-            else if (type == 'c')
+            else if (type == Constants.COL)
             {
                 match = checkColumnResults(slots, out matchingLines);
                 points = Constants.COL_POINT;
