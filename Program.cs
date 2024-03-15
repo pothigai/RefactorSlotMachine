@@ -19,9 +19,9 @@ namespace RefactorSlotMachine
             }
 
             List<char> selectedLines = new List<char>();
-            
+
             bool continueAhead = true;
-            
+
             while (continueAhead)
             {
                 char choice = UI.scanInputChar("Choose which lines to play (R = Row, C = Column, D = Diagonal) and then press P to play:");
@@ -65,34 +65,20 @@ namespace RefactorSlotMachine
             {
                 UI.clear();
 
-                //Checking if user has enough points to play
-                if (totalPoints <= 0)
+                bool reBuy = true;
+
+                (reBuy, totalPoints) = SC.checkTopUp(totalPoints, reBuy);
+                
+                if (!reBuy)
                 {
-                    char topUp = UI.scanInputChar($"You do not have enough points, would you like to top up? ({Constants.POSITVE_INPUT}/{Constants.NEGATIVE_INPUT}): ");
-
-                    while (topUp != Constants.POSITVE_INPUT && topUp != Constants.NEGATIVE_INPUT)
-                    {
-                        topUp = UI.scanInputChar($"Invalid input, please enter {Constants.POSITVE_INPUT}/{Constants.NEGATIVE_INPUT}:");
-                    }
-
-                    if (topUp == Constants.POSITVE_INPUT)
-                    {
-                        while (totalPoints <= Constants.MIN_BUYIN)
-                        {
-                            totalPoints += UI.scanInputInteger($"You don't meet the minimum of {Constants.MIN_BUYIN}, please enter another amount:");
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    break;
                 }
 
                 totalPoints -= Constants.PLAY_COST;
 
                 //Generate the random 3x3 matrix for the slot machine
 
-                int[,] slots = new int[3, 3] { { 2, 2, 2 }, { 3, 2, 2 }, { 2, 3, 2 } }; //Use to test code
+                int[,] slots = new int[3, 3] { { 1, 8, 2 }, { 3, 5, 7 }, { 2, 3, 2 } }; //Use to test code
 
                 //int[,] slots = new int[MATRIX_SIZE, MATRIX_SIZE];
 

@@ -156,5 +156,32 @@ namespace RefactorSlotMachine
             return (match, totalPoints);
         }
 
+        public (bool, int) checkTopUp(int totalPoints, bool reBuy)
+        {
+            if (totalPoints <= 0)
+            {
+                char topUp = UI.scanInputChar($"You do not have enough points, would you like to top up? ({Constants.POSITVE_INPUT}/{Constants.NEGATIVE_INPUT}): ");
+
+                while (topUp != Constants.POSITVE_INPUT && topUp != Constants.NEGATIVE_INPUT)
+                {
+                    topUp = UI.scanInputChar($"Invalid input, please enter {Constants.POSITVE_INPUT}/{Constants.NEGATIVE_INPUT}:");
+                }
+
+                if (topUp == Constants.POSITVE_INPUT)
+                {
+                    while (totalPoints <= Constants.MIN_BUYIN)
+                    {
+                        totalPoints = UI.scanInputInteger($"You don't meet the minimum of {Constants.MIN_BUYIN}, please enter another amount:");
+                    }
+
+                }
+                else
+                {
+                    reBuy = false;
+                }
+            }
+            return (reBuy, totalPoints);
+        }
+
     }
 }
