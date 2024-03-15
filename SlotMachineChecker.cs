@@ -173,7 +173,6 @@ namespace RefactorSlotMachine
                     {
                         totalPoints = UI.scanInputInteger($"You don't meet the minimum of {Constants.MIN_BUYIN}, please enter another amount:");
                     }
-
                 }
                 else
                 {
@@ -183,5 +182,29 @@ namespace RefactorSlotMachine
             return (reBuy, totalPoints);
         }
 
+
+        public bool checkAllValues(int[,] slots)
+        {
+            int firstValue = slots[0, 0];
+
+            bool allValuesMatch = true;
+
+            for (int i = 0; i < Constants.MATRIX_SIZE; i++)
+            {
+                for (int j = 0; j < Constants.MATRIX_SIZE; j++)
+                {
+                    if (slots[i, j] != firstValue)
+                    {
+                        allValuesMatch = false;
+                        break;
+                    }
+                }
+                if (!allValuesMatch)
+                {
+                    break;
+                }
+            }
+            return allValuesMatch;
+        }
     }
 }

@@ -78,7 +78,7 @@ namespace RefactorSlotMachine
 
                 //Generate the random 3x3 matrix for the slot machine
 
-                int[,] slots = new int[3, 3] { { 1, 8, 2 }, { 3, 5, 7 }, { 2, 3, 2 } }; //Use to test code
+                int[,] slots = new int[3, 3] { { 1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 } }; //Use to test code
 
                 //int[,] slots = new int[MATRIX_SIZE, MATRIX_SIZE];
 
@@ -130,23 +130,8 @@ namespace RefactorSlotMachine
                     SC.AwardPointsForDiagonalMatches(slots, ref totalPoints, ref diagonalMatch, Constants.DIAG_POINT);
                 }
 
-                int firstValue = slots[0, 0];
-                //Check if all 9 values are a match
-                for (int i = 0; i < Constants.MATRIX_SIZE; i++)
-                {
-                    for (int j = 0; j < Constants.MATRIX_SIZE; j++)
-                    {
-                        if (slots[i, j] != firstValue)
-                        {
-                            allValuesMatch = false;
-                            break;
-                        }
-                    }
-                    if (!allValuesMatch)
-                    {
-                        break;
-                    }
-                }
+                //Check all values in matrix
+                allValuesMatch = SC.checkAllValues(slots);
 
                 if (allValuesMatch)
                 {
