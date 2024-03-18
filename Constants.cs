@@ -21,5 +21,7 @@ namespace RefactorSlotMachine
         public const char COL = 'c';
         public const char DIAG = 'd';
         public const char PLAY = 'p';
+        public const string ROW_STRING = "ROW";
+        public const string COL_STRING = "COLUMN";
     }
 }

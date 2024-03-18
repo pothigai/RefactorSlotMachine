@@ -42,7 +42,7 @@ namespace RefactorSlotMachine
         {
             matchingRows = new bool[Constants.MATRIX_SIZE];
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < Constants.MATRIX_SIZE; i++)
             {
                 int colValue = inputMatrix[0, i];
                 bool allColSame = true;
@@ -117,14 +117,14 @@ namespace RefactorSlotMachine
             {
                 match = checkRowResults(slots, out matchingLines);
                 points = Constants.ROW_POINT;
-                line = "row";
+                line = Constants.ROW_STRING;
             }
 
             else if (type == Constants.COL)
             {
                 match = checkColumnResults(slots, out matchingLines);
                 points = Constants.COL_POINT;
-                line = "column";
+                line = Constants.COL_STRING;
             }
 
             if (match)
